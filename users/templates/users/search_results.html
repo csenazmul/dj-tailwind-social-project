@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h2 class="text-2xl font-semibold mb-6">Search Results for "{{ query }}"</h2>
+    
+    {% if users %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {% for user_profile in users %}
+        <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+            {% with profile=user_profile.profile %}
+            <div class="mb-4">
+                {% if profile.image %}
+                <img src="{{ profile.image.url }}" class="w-24 h-24 rounded-full object-cover mx-auto" alt="Profile picture">
+                {% else %}
+                <img src="/media/default.jpg" class="w-24 h-24 rounded-full object-cover mx-auto" alt="Default profile picture">
+                {% endif %}
+            </div>
+            {% endwith %}
+            <h5 class="text-lg font-medium text-gray-800">{{ user_profile.username }}</h5>
+            <a href="{% url 'public_profile' username=user_profile.username %}" class="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">View Profile</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-gray-600">No users found matching your search.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% comment %} {% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <title>Django Tailwind</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{% tailwind_css %}
+	</head>
+
+	<body class="bg-gray-50 font-serif leading-normal tracking-normal">
+       
+		<div class="container mx-auto">
+			<section class="flex items-center justify-center h-screen">
+				
+				<div>
+					{% block content %}
+					
+					{% endblock content %}
+				</div>
+			</section>
+		</div>
+	</body>
+</html> {% endcomment %}
+
+{% load static tailwind_tags %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Social App</title>
+	{% tailwind_css %} 
+    {% comment %} <script src="https://cdn.tailwindcss.com"></script> {% endcomment %}
+</head>
+<body class="bg-gray-100">
+    
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold text-gray-700"><a href="{% url 'home' %}">Social App</a></h1>
+            <div>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}" class="px-4 py-2 bg-red-500 text-white rounded-md">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="px-4 py-2 bg-blue-500 text-white rounded-md">Login</a>
+                    <a href="{% url 'register' %}" class="ml-2 px-4 py-2 bg-green-500 text-white rounded-md">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+ 
+
+        {% block content %}
+
+
+		
+		{% endblock content %}
+
+
+
+</body>
+</html>
+

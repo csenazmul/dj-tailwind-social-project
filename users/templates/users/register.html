@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% comment %} <h2>Register</h2>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Sign Up</button>
+  </form> {% endcomment %}
+
+  <div class="container items-center justify-center bg-gray-100 flex  h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md w-96">
+      <h2 class="text-2xl font-semibold text-gray-800 text-center">Create an Account</h2>
+      <p class="text-gray-500 text-center mb-6">Join us today!</p>
+
+      <form method="post">
+          {% csrf_token %}
+
+          <!-- Username -->
+          <div class="mb-4">
+              <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+              <input type="text" name="username" id="username" required
+                  class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+          </div>
+
+          <!-- Password -->
+          <div class="mb-4">
+              <label for="password1" class="block text-sm font-medium text-gray-700">Password</label>
+              <input type="password" name="password1" id="password1" required
+                  class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="mb-4">
+              <label for="password2" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+              <input type="password" name="password2" id="password2" required
+                  class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">
+              Sign Up
+          </button>
+      </form>
+
+      <!-- Additional Links -->
+      <div class="mt-4 text-center">
+          <p class="text-gray-600 text-sm">
+              Already have an account? <a href="{% url 'login' %}" class="text-blue-500">Login</a>
+          </p>
+      </div>
+  </div>
+  </div>
+
+{% endblock %}

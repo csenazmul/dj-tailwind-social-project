@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ profile_user.username }}'s Profile{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4">
+    <div class="relative mb-4">
+        {% if profile.background_image %}
+        <img src="{{ profile.background_image.url }}" class="w-full h-52 object-cover" alt="Background">
+        {% endif %}
+        <div class="absolute bottom-[-50px] left-1/2 transform -translate-x-1/2">
+            {% if profile.image %}
+            <img src="{{ profile.image.url }}" class="rounded-full w-24 h-24 object-cover border-4 border-white shadow-lg" alt="Profile">
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="text-center mt-16">
+        <h3 class="text-2xl font-semibold">{{ profile_user.username }}'s Profile</h3>
+        <p class="text-gray-600">{{ profile.bio }}</p>
+    </div>
+
+    <!-- User Posts -->
+    <div class="mt-10">
+        <h4 class="text-xl font-semibold mb-3">Posts</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {% for post in posts %}
+            <div class="bg-white shadow-md rounded-lg p-4">
+                <p class="text-gray-700">{{ post.content|truncatechars:100 }}</p>
+                {% if post.image %}
+                <img src="{{ post.image.url }}" class="w-full h-40 object-cover rounded-lg mt-2" alt="Post image">
+                {% endif %}
+                <div class="text-gray-500 text-sm mt-2">{{ post.created_at|date:"F d, Y" }}</div>
+                <div class="flex items-center mt-2 text-gray-500">
+                    <div class="mr-3 flex items-center">
+                        <i class="fas fa-heart mr-1"></i> {{ post.likes.count }} likes
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-comment mr-1"></i> {{ post.comments.count }} comments
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <a href="{% url 'post_detail' post.id %}" class="text-blue-500 hover:underline">View Full Post</a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full text-center">
+                <p class="text-gray-600">No posts yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Add Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}

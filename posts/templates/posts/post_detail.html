@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.author.username }}'s Post{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
+        <div class="flex justify-between items-center mb-4">
+            <h5 class="text-lg font-semibold">Posted by {{ post.author.username }}</h5>
+            <small class="text-gray-500">{{ post.created_at|date:"F d, Y" }}</small>
+        </div>
+        
+        <p class="text-gray-700">{{ post.content }}</p>
+        
+        {% if post.image %}
+        <img src="{{ post.image.url }}" class="w-full rounded-lg mt-4" alt="Post image">
+        {% endif %}
+
+        <!-- Post Stats and Like Button -->
+        <div class="flex items-center mt-4 space-x-4">
+            {% if user.is_authenticated %}
+                <button class="like-btn flex items-center px-4 py-2 rounded-md transition duration-300 {% if user in post.likes.all %}bg-red-500 text-white{% else %}border border-red-500 text-red-500{% endif %}" 
+                        data-post-id="{{ post.id }}">
+                    <i class="fas fa-heart mr-2"></i> 
+                    <span class="like-count">{{ post.likes.count }}</span>
+                </button>
+            {% else %}
+                <div class="text-gray-500 flex items-center">
+                    <i class="fas fa-heart mr-2"></i> {{ post.likes.count }} likes
+                </div>
+            {% endif %}
+            <div class="text-gray-500 flex items-center">
+                <i class="fas fa-comment mr-2"></i> {{ post.comments.count }} comments
+            </div>
+        </div>
+
+        {% if user == post.author %}
+        <div class="mt-4 flex space-x-3">
+            <a href="{% url 'edit_post' post.pk %}" class="px-4 py-2 bg-blue-500 text-white rounded-md">Edit</a>
+            <a href="{% url 'delete_post' post.pk %}" class="px-4 py-2 bg-red-500 text-white rounded-md">Delete</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Comments Section -->
+    <div class="bg-white shadow-lg rounded-lg p-6">
+        <h5 class="text-lg font-semibold mb-4">Comments</h5>
+
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'add_comment' post.pk %}" class="mb-4">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button type="submit" class="mt-2 px-4 py-2 bg-green-500 text-white rounded-md">Add Comment</button>
+        </form>
+        {% else %}
+        <p class="text-gray-500 mb-4">Please <a href="{% url 'login' %}" class="text-blue-500">login</a> to add a comment or like this post.</p>
+        {% endif %}
+
+        {% for comment in post.comments.all %}
+        <div class="mb-3 border-b border-gray-300 pb-3">
+            <div class="flex justify-between items-center">
+                <strong>{{ comment.author.username }}</strong>
+                <small class="text-gray-500">{{ comment.created_at|date:"F d, Y" }}</small>
+            </div>
+            <p class="text-gray-700">{{ comment.content }}</p>
+        </div>
+        {% empty %}
+        <p class="text-gray-500">No comments yet.</p>
+        {% endfor %}
+    </div>
+    
+    <a href="{% url 'home' %}" class="mt-6 inline-block px-4 py-2 bg-gray-500 text-white rounded-md">Back to Home</a>
+</div>
+
+<!-- Add Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<!-- Like functionality script -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.like-btn').click(function() {
+        var button = $(this);
+        var postId = button.data('post-id');
+        
+        $.ajax({
+            url: `/post/${postId}/like/`,
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.liked) {
+                    button.removeClass('border border-red-500 text-red-500').addClass('bg-red-500 text-white');
+                } else {
+                    button.removeClass('bg-red-500 text-white').addClass('border border-red-500 text-red-500');
+                }
+                button.find('.like-count').text(response.total_likes);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
