@@ -44,7 +44,7 @@ A modern social media platform built with Django that enables users to connect, 
 1. Clone the repository
 ```bash
 git clone <repository-url>
-cd django_social_media_project
+cd dj-tailwind-social-project
 ```
 
 2. Set up virtual environment
